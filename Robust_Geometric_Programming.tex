@@ -1,0 +1,111 @@
+\section{Robust Geometric Programming} \label{RGP}
+The data in a geometric program is usually prone to uncertainties that could either have a probabilistic description or are known to belong to an uncertainty set. Robust geometric programming assumes the latter, and solves the problem for the worst case scenario by finding the best solution that is feasible to all possible realizations from the uncertainty set. This section introduces different forms of GPs, derives intractable RGP formulations, and then states the tractable approximation presented in \cite{hsiung_kim_boyd_2007}.
+\subsection{Other Forms of a Geometric Program}
+
+By replacing each monomial equality constraint $h\left(\vec{x}\right) = 1$ by the two monomial inequality constraints $h\left(\vec{x}\right) \leq 1$ and $\frac{1}{h\left(\vec{x}\right)} \leq 1$, we arrive at the \textbf{inequality form} of a GP
+\begin{equation}
+\begin{aligned}
+	& \min && \textstyle{\sum}_{k=1}^{K_0}e^{\vec{a_{0k}}\vec{x} + b_{0k}} \\
+	& \text{s.t.} && \textstyle{\sum}_{k=1}^{K_i}e^{\vec{a_{ik}}\vec{x} + b_{ik}} \leq 1 \quad \forall i \in 1,...,m\\
+\end{aligned}
+\label{GP_inequality}
+\end{equation}
+Without loss of generality, the objective function will be assumed deprived of any data (i.e. replacing it with its epigraph form). Let $\mat{A}$ be the exponents of a GP with components $\vec{a_{ik}}$, and $\vec{b}$ be the coefficients of a GP with components $b_{ik}$.
+%
+%. The logic behind this classification is that each set of constraints will be dealt with in a different way in later sections. The new form of a GP, referred to by the \textbf{categorized form} is as follows 
+%\begin{equation}
+%\begin{aligned}
+%& \min &&f_0\left(\vec{x}\right)\\
+%& \text{subject to} &&\textstyle{\sum}_{k=1}^{K_i}e^{\vec{a}_{ik}\vec{x} + %b_{ik}} &&\leq 1 &&\forall i \in \mathbf{P}\\
+%& &&e^{\vec{a}_{i1}\vec{x} + b_{i1}} + e^{\vec{a}_{i2}\vec{x} + b_{i2}} &&%\leq 1 &&\forall i \in \mathbf{N}\\
+%& &&e^{\vec{a}_{i1}\vec{x} + b_{i1}} &&\leq 1 &&\forall i \in \mathbf{M}
+%\end{aligned}
+%\label{GP_classified}
+%\end{equation}
+
+Also relevant is the \textbf{convex form} of a GP, where a logarithm is applied to the objective function and to the constraints.
+\begin{equation}
+\begin{aligned}
+& \min &&\log\left(f_0\left(\vec{x}\right)\right)\\
+& \text{subject to} &&\log\left(\textstyle{\sum}_{k=1}^{K_i}e^{\vec{a_{ik}}\vec{x} + b_{ik}}\right) &&\leq 0 &&\forall i \in 1,...,m
+\end{aligned}
+\label{GP_convex}
+\end{equation}
+Note that a GP in its convex form is a convex program whose dual is the entropy maximization problem \cite{woodyThesis}.
+
+A final interesting form of a GP is the \textbf{categorized form}, which will be introduced later in Section \ref{EqIntFor}, where the constraints of a GP are categorized into different sets according to the number of monomial terms in each posynomial constraint.
+\subsection{Robust Counterparts}
+As mentioned before, a formulation immune to uncertainty in the system's data should be derived. The data ($\mat{A}$ and $\vec{b}$) will be contained in an uncertainty set $\mathcal{U}$, where $\mathcal{U}$ is parameterized affinely by perturbation vector $\vec{\zeta}$ as follows
+\begin{equation}
+	\mathcal{U} = \left\{\left[\mat{A};\vec{b}\right] = \left[\mat{A}^0;\vec{b}^0\right] + \textstyle{\sum_{l=1}^{L}\zeta_l\left[\mat{A}^l;\vec{b}^l\right]}\right\}
+	\label{Data}
+\end{equation}
+where $\vec{\zeta}$ belongs to a conic perturbation set $\mathcal{Z} \in \mathbb{R}^L$ paramaterized by $\mat{F},\,\mat{G},\,\vec{h}$ and $\textbf{K}$ such that
+\begin{equation}
+\mathcal{Z} = \left\{ \vec{\zeta} \in \mathbb{R}^L: \exists \vec{u} \in \mathbb{R}^k:\mat{F}\vec{\zeta} + \mat{G}\vec{u} + \vec{h} \in \textbf{K} \right\}
+\label{perturbation_set}
+\end{equation}
+where $\mathbf{K}$ is a Regular cone in $\mathbb{R}^N$ with a non-empty interior if it is not polyhedral, $\mat{F} \in \mathbb{R}^{N \times L}$, $\mat{G} \in \mathbb{R}^{N \times k}$, and $\vec{h} \in \mathbb{R}^{N}$.
+
+Accordingly, the robust counterpart of the uncertain geometric program in \eqref{GP_inequality} is
+\begin{equation}
+\begin{aligned}
+& \min &&f_0\left(\vec{x}\right)\\
+& \text{subject to} &&\textstyle{\sum}_{k=1}^{K_i}e^{\vec{a_{ik}}\left(\zeta\right)\vec{x} + b_{ik}\left(\zeta\right)} &&\leq 1 &&\forall i \in 1,...,m && \forall \vec{\zeta} \in \mathcal{Z}
+\end{aligned}
+\label{GP_counterparts}
+\end{equation}
+These constraints state that the robust optimal solution should be feasible for all possible realizations of the perturbation vector $\vec{\zeta}$. However, the above is a semi-infinite optimization problem, that is, an optimization problem with finite number of variables and infinite number of constraints. Such a problem is intractable using current solvers, and so an equivalent finite set of constraints is usually derived
+\begin{equation}
+\begin{aligned}
+& \min &&f_0\left(\vec{x}\right)\\
+& \text{subject to} &&\max_{\vec{\zeta} \in \mathcal{Z}} \left\{\textstyle{\sum}_{k=1}^{K_i}e^{\vec{a_{ik}}\left(\zeta\right)\vec{x} + b_{ik}\left(\zeta\right)}\right\} &&\leq 1 &&\forall i \in 1,...,m\\
+\end{aligned}
+\label{GP_counterparts_finite}
+\end{equation}
+Here each constraint is a maximization problem, and in many convex programs can be replaced by its dual. Unfortunately such a replacement will not work in the case of geometric programming. Therefore we will gradually construct a tractable approximation of this robust geometric program throughout this article, with a focus on polyhedral and elliptical uncertainty sets.
+
+\subsection{Two-Term Formulation}
+The current state-of-the-art in approximating RGPs is found in \cite{hsiung_kim_boyd_2007}. They present an interesting tractable formulation of an approximate robust geometric program which by replacing each posynomial with a set of two-term posynomials arrives at the following formulation
+\begin{equation}
+\begin{aligned}
+& \min &&f_0\left(\vec{x}\right)\\
+& \text{s.t.} &&\max_{\vec{\zeta} \in \mathcal{Z}} \left\{e^{\vec{a_{i1}}\left(\zeta\right)\vec{x} + b_{i1}\left(\zeta\right)} + e^{t_1}\right\} &&\leq 1 &&\forall i:K_i \geq 3\\
+& &&\max_{\vec{\zeta} \in \mathcal{Z}} \left\{e^{\vec{a_{ik}}\left(\zeta\right)\vec{x} + b_{ik}\left(\zeta\right)} + e^{t_k}\right\} &&\leq e^{t_{k-1}} &&\forall i:K_i \geq 4 \\ & && && && \forall k \in 2,...,K_i-2\\
+& &&\max_{\vec{\zeta} \in \mathcal{Z}} \left\{\textstyle{\sum}_{k=K_i-1}^{K_i}e^{\vec{a_{ik}}\left(\zeta\right)\vec{x} + b_{ik}\left(\zeta\right)}\right\} &&\leq e^{t_{K_i-2}} &&\forall i:K_i \geq 3\\
+& &&\max_{\vec{\zeta} \in \mathcal{Z}} \left\{\textstyle{\sum}_{k=1}^{K_i}e^{\vec{a_{ik}}\left(\zeta\right)\vec{x} + b_{ik}\left(\zeta\right)}\right\} &&\leq 1 &&\forall i:K_i \leq 2\\
+\end{aligned}
+\label{Boyd_formulation}
+\end{equation}
+The left-hand side of each constraint above is either a monomial or a two-term posynomial; monomials are directly tractable, while two-term posynomials can be well approximated by piecewise-linear functions and thereby made tractable, as will be discussed in Section \ref{twoTerm}.\\
+As an example, a GP 
+\begin{displaymath}
+\begin{aligned}
+    & \min &&f\\
+    & \text{ s.t.} &&\max\left\{M_1 + M_2 + M_3 + M_4\right\} &&\leq 1\\
+    & && \max\left\{M_5 + M_6\right\} &&\leq 1
+\end{aligned}
+\end{displaymath}
+would be reformulated as
+\begin{displaymath}
+\begin{aligned}
+    & \min &&f\\
+    & \text{ s.t.} && \max\left\{M_1 + e^{t_1}\right\} && \leq 1\\
+    & && \max\left\{M_2 + e^{t_2}\right\} && \leq e^{t_1}\\
+    & && \max\left\{M_3 + M_4\right\} && \leq e^{t_2}\\
+    & && \max\left\{M_5 + M_6\right\} &&\leq 1
+\end{aligned}
+\end{displaymath}
+Where $\left\{M_i\right\}_{i=1}^{6}$ is a family of monomials.
+
+The formulation in \eqref{Boyd_formulation} decouples every monomial in a posynomial except for the last two, yielding a conservative solution. If $\mathbf{P} = \left\{i:K_i >=3\right\}$, $\mathbf{N} = \left\{i:K_i = 2\right\}$, and $\mathbf{M} = \left\{i:K_i = 1\right\}$, and if $r$ is the number of piecewise-linear terms used to approximate a two-term posynomial, then the number of constraints for the approximate tractable problem in \eqref{Boyd_formulation} is $$r\textstyle{\sum}_{k \in \mathbf{P}} \left(K_i - 1\right) + r|\mathbf{N}| + |\mathbf{M}|$$
+% In convex form, the robust counterparts can be written as follows
+% \begin{equation}
+% \begin{aligned}
+% & \min &&\log\left(f_0\left(\vec{x}\right)\right)\\
+% & \text{subject to} && \max_{\zeta \in \mathcal{Z}}\left\{\log \right(\textstyle{\sum}_{k=1}^{K_i}e^{\vec{a}_{ik}\vec{x} + b_{ik}}\left)\right\} &&\leq 0 &&\forall i \in \mathbf{P},\mathbf{N} \\
+% & && \max_{\zeta \in \mathcal{Z}}\left\{\vec{a}_{i1}\vec{x} + b_{i1} \right\} &&\leq 0 &&\forall i \in \mathbf{M}\\
+% \end{aligned}
+% \label{GP_convex_counterparts}
+% \end{equation}
+% The last set of constraints corresponding to $\mathbf{M}$ is the maximization of linear function, therefore the constraint can be replaced by its dual (Appendix \ref{LP_to_GP}). However, the constraints corresponding to $\mathbf{P}$ and $\mathbf{N}$ are not, and need to be safely approximated.

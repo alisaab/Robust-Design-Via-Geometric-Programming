@@ -1,0 +1,54 @@
+\appendix
+
+\input{LP_to_GP}
+
+\section{Cones} \label{cones}
+\subsection{Euclidean Space}
+An Euclidean space is a finite dimensional linear space over real numbers equipped with an inner product $\langle x,y \rangle_E$.
+
+\subsection{Cones}
+A nonempty subset $\textbf{K}$ of an Euclidean space is called a cone if for any $x \in \textbf{K}$ and $\alpha \geq 0$ $\alpha x \in \textbf{K}$ \cite{bertsimas_tsitsiklis_1997}.\\
+A cone is said to be convex cone if $\alpha, \beta \geq 0$ and $x, y \in \textbf{K}$, we have $\alpha x + \beta y \in \textbf{K}$ \cite{ben-tal_ghaoui_nemirovski_2009}.
+
+\subsection{Dual Cones}
+If $\textbf{K}$ is a cone in an euclidean space $\textbf{E}$, then the set 
+\begin{equation*}
+    \textbf{K}^* = \left\{ e \in \textbf{E}:\langle e,h \rangle_E \geq 0 \quad \forall h \in \textbf{K} \right\}
+\end{equation*}
+is also a cone and is called the cone dual to $\textbf{K}$ \cite{ben-tal_ghaoui_nemirovski_2009}.
+
+\section{Equivalence Relations} \label{EqRel}
+Let $\mathcal{R}$ be some relation on a set $\mathbf{S}$, and let $x,y \in \mathbf{S}$. We say $x \simeq y$ if $x$ and $y$ are related.
+ 
+A relation $\mathcal{R}$ on a set $\mathbf{S}$ is called an equivalence relation if the following is true
+\begin{itemize}
+	\item the relation is reflexive, i.e. for all $a \in \mathbf{S}$, $a \simeq a$
+	\item the relation is symmetric, i.e. for $a,b \in \mathbf{S}$, if $a \simeq b$, then $b \simeq a$
+	\item the relation is transitive, i.e. for $a, b, c \in \mathbf{S}$, if $a \simeq b$ and $b \simeq c$, then $a \simeq c$
+\end{itemize}
+An equivalence relation naturally partitions a set into equivalence classes. Those classes are such that if $a$ and $b$ belong to the same class then $a \simeq b$, and if $a$ and $b$ are not related, then they belong to different classes.
+
+\section{Signomial Programming} \label{sigProg}
+Signomials allow us to solve non log-convex optimization problem as sequential geometric programs \cite{MARANAS1997351}. A signomial program has the following form
+\begin{equation}
+\begin{aligned}
+&\text{minimize } &&f_{0}(\mathbf{x})\\
+&\text{subject to } &&f_{i}(\mathbf{x}) &&\leq 1 \quad &i = 1, ...., m_p\\
+& &&g_{i}(\mathbf{x}) -  h_{i}(\mathbf{x}) &&\leq 1 \quad &i = 1, ...., m_s
+\end{aligned}
+\label{sp}
+\end{equation}
+where $f_{i}$, $g_{i}$, and $h_{i}$ are posynomials.
+
+To clarify how a signomial program is useful in our discussion, consider equation \eqref{linearCon_linPerts}, and assume that $\mathcal{Z}$ is an elliptical uncertainty set. Using the knowledge from subsection \ref{ellip}, \eqref{linearCon_linPerts} is equivalent to
+\begin{equation}
+\begin{aligned}
+&\textstyle{\sum}_{k \in S_{i,j}}g_{i,j}^k v_{i,j}^k + s_{i,j}^{0.5} && \leq e^{t_{ij}} \qquad && \forall (i, j) \in \mathbf{P}\\
+&\textstyle{\sum}_{l=1}^L \sigma_l s_{i,j}^{l} && \leq s_{i,j} \qquad && \forall (i, j) \in \mathbf{P}\\
+&\left(\textstyle{\sum}_{k \in S_{i,j}}f_{i,j}^{k,l}v_{i,j}^k\right)^2 && \leq s_{i,j}^{l} \qquad \forall l \in 1,...,L \qquad && \forall (i, j) \in \mathbf{P}
+\end{aligned}
+\label{sp_compatible_constraints}
+\end{equation}
+If one of the `$f$'s is negative, then some constraints from the third set might not be GP-compatible, but SP-compatible. The robust geometric program will be a signomial program.
+\begin{comment}
+\end{comment}

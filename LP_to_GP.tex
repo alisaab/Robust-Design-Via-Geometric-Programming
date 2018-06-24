@@ -1,0 +1,103 @@
+\section{Robust Linear Programming} \label{LP_to_GP}
+
+This section reviews robust linear programming, a building block to formulate a tractable approximate robust geometric program. Two different examples of perturbation sets will be used for clarification: box and elliptical. Those sets will be used for our discussion throughout the article due to the fact that they are important and frequently used.
+
+Consider the system of linear constraints
+\begin{displaymath}
+    \mat{A}\vec{x} + \vec{b} \leq 0
+\end{displaymath}
+where
+\begin{equation*}
+\begin{aligned}
+\mat{A} &\text{ is $m \times n$}\\
+\vec{x} &\text{ is $n \times 1$}\\
+\vec{b} &\text{ is $m \times 1$}\\
+\end{aligned}
+\end{equation*}
+Assuming that data is uncertain and is given by equations \eqref{Data} and \eqref{perturbation_set}, the constraints should be satisfied for all values of $\vec{\zeta}$, and thus the robust counterparts of the $i^{th}$ linear constraint is
+\begin{equation*}
+    \sup_{\vec{\zeta} \in \mathcal{Z}}\left\{ \textstyle{\sum}_{l=1}^{L} \zeta_l([\vec{a}^l_i]^T \vec{x} + b^l_i) \right\} \leq - [\vec{a}^0_i]^T\vec{x} - b^0_i
+\end{equation*}
+This is equivalent to the optimization problem
+\begin{equation}
+    \max_{\vec{\zeta},\vec{u}} \left\{ \textstyle{\sum}_{l=1}^{L} \zeta_l([\vec{a}^l_i]^T \vec{x} + b^l_i): \mat{F}\vec{\zeta} + \mat{G}\vec{u} + \vec{h} \in \mathbf{K} \right\} \leq - [\vec{a}^0_i]^T\vec{x} - b^0_i
+\label{linear_counterparts}
+\end{equation}
+Applying the conic duality theorem, equation \eqref{linear_counterparts} is equivalent to
+\begin{equation}
+\begin{aligned}
+\vec{h}^T\vec{y}_i + [\vec{a}_i^0]^T\vec{x} + b_i^0 &\leq 0\\
+\mat{G}^T\vec{y}_i &= \vec{0}\\
+(\mat{F}^T\vec{y}_i)_l + [\vec{a}_i^l]^T\vec{x} + b_i^l &= 0 \quad l = 1,2,...,L\\
+\vec{y}_i &\in \mathbf{K}^*
+\end{aligned}
+\label{robust_linear_general}
+\end{equation}
+where $\vec{y}_i \in \mathbb{R}^N$, and $\mathbf{K}^*$ is the dual cone of $\mathbf{K}$ (see Appendix \ref{cones}) \cite{ben-tal_ghaoui_nemirovski_2009}.
+
+\subsection{Box Uncertainty Sets} \label{box_linear_app}
+If the perturbation set $\mathcal{Z}$ given in equation \eqref{perturbation_set} is a box uncertainty set, i.e. $\|\vec{\zeta}\|_{\infty} \leq \Gamma$, then 
+\begin{itemize}
+	\item $\mat{F}\vec{\zeta} = [\vec{\zeta};0]$ 
+	\item $\mat{G} = \mat{0}$, $\vec{h} = [\vec{0}_{L \times 1};\Gamma]$
+	\item $\mathbf{K} = \left\{(\vec{z};t) \in \mathbb{R}^L \times \mathbb{R}: t > \|\vec{z}\|_{\infty} \right\}$ 
+	\item the dual cone $\mathbf{K}^* = \left\{(\vec{z};t) \in \mathbb{R}^L \times \mathbb{R}: t > \|\vec{z}\|_{1} \right\}$
+\end{itemize}
+and therefore, equation \eqref{linear_counterparts} is equivalent to
+\begin{equation}
+\Gamma \textstyle{\sum}_{l=1}^L |- {b}^l_{i} - \vec{a}^l_i\vec{x}| + \vec{a}^0_i\vec{x} + b^0_i \leq 0
+\label{box_absolute}
+\end{equation}
+If only $\vec{b}$ is uncertain, i.e. $\mat{A}^l = 0 \quad \forall l = 1,2,...,L$, then equation \eqref{box_absolute} will become
+\begin{equation}
+\textstyle{\sum}_{l=1}^L \vec{a}^0_{i}\vec{x} + b^0_{i} + \Gamma \textstyle{\sum}_{l=1}^L |b^l_{i}| \leq 0
+\label{box_coeff}
+\end{equation}
+which is a linear constraint.\\
+On the other hand, if $\mat{A}$ is also uncertain, then equation \eqref{box_absolute} is equivalent to the following set of linear constraints
+\begin{equation}
+\begin{aligned}
+\Gamma \textstyle{\sum}_{l=1}^L w^l_{i} + \vec{a}^0_{i}\vec{x} + b^0_{i} &\leq 0\\
+- b^l_{i} - \vec{a}^l_{i}\vec{x} &\leq w^l_{i} &&\forall l \in 1,...,L\\
+b^l_{i} + \vec{a}^l_{i}\vec{x} &\leq w^l_{i} &&\forall l \in 1,...,L\\
+\end{aligned}
+\label{box_linear}
+\end{equation}
+
+\subsection{Elliptical Uncertainty Sets} \label{ellip}
+If the perturbation set $\mathcal{Z}$ is now an elliptical uncertainty set, i.e. $\textstyle{\sum}_{l=1}^L\frac{\zeta_l}{\sigma_l} \leq \Gamma$, then 
+\begin{itemize}
+	\item $\mat{F}\vec{\zeta} = [\mat{\sigma}^{-1}\vec{\zeta};\ 0]$ with $\mat{\sigma} = \text{diag}(\sigma_1,...,\sigma_L)$
+	\item $\mat{G} = \mat{0}$, $\vec{h} = [\vec{0}_{L \times 1};\ \Gamma]$
+	\item $\mathbf{K} = \left\{(\vec{z};t) \in \mathbb{R^L} \times \mathbb{R}: t > \|\vec{z}\|_{2} \right\}$
+	\item The dual cone $\mathbf{K}^*$ = $\mathbf{K}$ (Lorentz or second order cone)
+\end{itemize}
+and therefore, equation \eqref{linear_counterparts} is equivalent to
+\begin{equation}
+\Gamma \sqrt{\textstyle{\sum}_{l=1}^L \sigma_l^2(- b^l_{i} - \vec{a}^l_{i}\vec{x})^2} + \vec{a}^0_{i}\vec{x} + b^0_{i} \leq 0
+\label{ell_absolute}
+\end{equation}
+which is a second order conic constraint.\\
+If only $\vec{b}$ is uncertain, i.e. $\mat{A}^l = 0 \quad \forall l = 1,2,...,L$, then equation \eqref{ell_absolute} will become
+\begin{equation}
+\vec{a}^0_{i}\vec{x} + b^0_{i} + \Gamma \sqrt{\textstyle{\sum}_{l=1}^L \sigma_l^2(b^l_{i})^2} \leq 0
+\label{ell_coeff}
+\end{equation}
+which is a linear constraint ($\sqrt{\textstyle{\sum}_{l=1}^L \sigma_l^2(b^l_{i})^2}$ is a constant).
+\begin{comment}
+\subsection{Norm-one Uncertainty Sets}
+Briefly, if the perturbation set is a norm-one uncertainty set, i.e. $\|\vec{\zeta}\|_1 \leq \Gamma$, then if $\mat{A}^l = 0$, the robust counterparts is equivalent to
+\begin{equation}
+\textstyle{\sum}_{l=1}^L \vec{a}^0_{i}\vec{x} + b^0_{i} + \Gamma \max_{l=1,..,L} |b^l_{i}| \leq 0
+\label{rom_coeff}
+\end{equation}
+while if $\mat{A}$ is uncertain, then \eqref{linear_counterparts} is equivalent to
+\begin{equation}
+\begin{aligned}
+\Gamma w_{i} + \vec{a}^0_{i}\vec{x} + b^0_{i} &\leq 0\\
+- b^l_{i} - \vec{a}^l_{i}\vec{x} &\leq w_{i} &&\forall l \in 1,...,L\\
+b^l_{i} + \vec{a}^l_{i}\vec{x} &\leq w_{i} &&\forall l \in 1,...,L\\
+\end{aligned}
+\label{rom_linear}
+\end{equation}
+\end{comment}

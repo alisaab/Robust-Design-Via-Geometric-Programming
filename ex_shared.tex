@@ -1,0 +1,75 @@
+% SIAM Shared Information Template
+% This is information that is shared between the main document and any
+% supplement. If no supplement is required, then this information can
+% be included directly in the main document.
+
+
+% Packages and macros go here
+\usepackage{verbatim}
+\usepackage{amsmath} % Required for some math elements 
+\usepackage{color} %Required to write in colours
+\usepackage{url} % Written by Donald Arseneau
+\usepackage{amssymb,bm}
+\usepackage{tabto}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{stackengine}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\usepackage{esdiff}
+\renewcommand{\vec}{\bm}
+\newcommand{\mat}{\mathbf}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{algorithmic}
+\usepackage{nomencl}
+\usepackage{tabu, multirow}
+% \usepackage{caption}
+\usepackage{subcaption}
+%\usepackage{mwe}
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\makenomenclature
+\ifpdf
+  \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
+\else
+  \DeclareGraphicsExtensions{.eps}
+\fi
+
+%strongly recommended
+\numberwithin{theorem}{section}
+
+% Declare title and authors, without \thanks
+\newcommand{\TheTitle}{Robust Designs Via Geometric Programming} 
+\newcommand{\TheAuthors}{A. Saab, E. Burnell, and W. W. Hoburg}
+
+% Sets running headers as well as PDF title and authors
+\headers{\TheTitle}{\TheAuthors}
+
+% Title. If the supplement option is on, then "Supplementary Material"
+% is automatically inserted before the title.
+\title{{\TheTitle}}%\thanks{Submitted to the editors DATE.
+%\funding{This work was funded by the Fog Research Institute under contract no.~FRI-454.}}}
+
+% Authors: full names plus addresses.
+\author{
+  Ali Saab\thanks{Department of Computations for Design and Optimization, Massachusetts Institute of Technology, Cambridge, MA
+    (\email{saab@mit.edu}).}
+  \and
+  Edward Burnell\thanks{Department of Mechanical Engineering, Massachusetts Institute of Technology, Cambridge, MA (\email{eburn@mit.edu}).}
+  \and
+  Warren W. Hoburg\thanks{Department of Aeronautics and Astronautics, Massachusetts Institute of Technology, Cambridge, MA (\email{whoburg@mit.edu}).}
+}
+
+\usepackage{amsopn}
+\DeclareMathOperator{\diag}{diag}
+
+
+%%% Local Variables: 
+%%% mode:latex
+%%% TeX-master: "ex_article"
+%%% End: 

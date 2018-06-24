@@ -1,0 +1,48 @@
+\section{Robust Two Term Posynomials[Review]} \label{twoTerm}
+
+We will now review work done in \cite{hsiung_kim_boyd_2007} on using piecewise-linear functions to approximate two-term posynomials. 
+
+Consider the convex function $\phi(x) = \log(1 + e^x)$. The unique best piecewise-linear convex lower approximation of $\phi$  with $r$ terms is defined as
+\begin{equation}
+\underline{\phi}_r = 
+\begin{cases}
+0 \qquad &\text{if} \qquad x \in (- \infty, x_1]\\
+\underline{a}_ix + \underline{b}_i &\text{if} \qquad x \in [x_i, x_{i+1}], i=1,2,..,r-2\\
+x &\text{if} \qquad x \in [x_{r-1}, \infty)
+\end{cases}
+\label{lower_phi}
+\end{equation}
+such that
+
+\begin{align*}
+& x_1 < x_2 < ... < x_{r-1} \\
+& 0 = \underline{a}_0 < \underline{a}_1 < \underline{a}_2 < ... < \underline{a}_{r-2} < \underline{a}_{r-1} = 1 \\
+& 1 = \underline{a}_i + \underline{a}_{r-i-1} \quad\quad \forall i \in \left\{0,1, ..., r-1\right\} \\
+& \underline{b}_i = \underline{b}_{r-i-1} \hspace{1.38cm} \forall i \in \left\{1, ..., r-2\right\} \\
+& \underline{b}_0 = \underline{b}_{r-1} = 0
+\end{align*}
+
+\noindent Moreover, $\exists$ $\tilde{x}_1, \tilde{x}_2, ..., \tilde{x}_{r-2} \in \mathbf{R}$ satisfying
+$$
+x_1 < \tilde{x}_1 < x_2 < \tilde{x}_2 < ... < x_{r-2} < \tilde{x}_{r-2} < x_{r-1}
+$$
+such that $\underline{a}_ix + \underline{b}_i$ is tangent to $\phi$ at $\tilde{x}_i$.
+
+The maximum approximation error $\epsilon_r$ of this piecewise-linearization occurs at the break points $x_1, ..., x_{r-1}$ (for a constructive algorithm of the above coefficients, refer to \cite{hsiung_kim_boyd_2007}). This piecewise-linearization can then be used to safely approximate a two-term posynomial.
+
+Letting $h= \log(e^{y_1} + e^{y_2})$ be a two term posynomial in log-space, where $y_1 = \vec{a}_1\vec{x} + b_1$ and $y_2 = \vec{a}_2\vec{x} + b_2$, the unique best r-term piecewise-linear lower approximation is 
+\begin{equation}
+\begin{aligned}
+\underline{h_r} = \max \{&\underline{a}_{r-1}y_1 + \underline{a}_0y_2 + \underline{b}_0, \underline{a}_{r-2}y_1 + \underline{a}_1y_2 + \underline{b}_1, \underline{a}_{r-3}y_1 + \underline{a}_2y_2 + \underline{b}_2,\ ...,\\
+ & \underline{a}_{1}y_1 + \underline{a}_{r-2}y_2 + \underline{b}_{r-2}, \underline{a}_0y_1 + \underline{a}_{r-1}y_2 + \underline{b}_{r-1}\}
+\end{aligned}
+\end{equation}
+while its unique best r-term piecewise-linear upper approximation is 
+\begin{equation}
+\overline{h_r} = \underline{h_r} + \epsilon_r
+\end{equation}
+where $\underline{a}_{0}, \underline{a}_{1}, ..., \underline{a}_{r-1}$ and $\underline{b}_{0}, \underline{b}_{1}, ..., \underline{b}_{r-1}$ are as given in equation \eqref{lower_phi}, and $\epsilon_r$ is the maximum error between $\phi$ and $\underline{\phi}_r$.
+
+Since $\overline{h}_r \geq h$, then each posynomial in the set $\mathbf{N}$ can be safely approximated by its own $\overline{h_r}$. Replacing the two term posynomial constraints by their piecewise-linear lower approximation will lead to a relaxed formulation, and thus the difference between the safe formulation's solution and the relaxed formulation's solution is an indication of how good an approximation is, and whether the number of piecewise-linear terms $r$ should be further increased or not.
+
+Because a piecewise-linear constraint can be represented as a set of linear constraints, these two-term posynomial approximations can be transformed to GP. This GP can be made less conservative by increasing the number of piecewise-linear terms.

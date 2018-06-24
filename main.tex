@@ -1,0 +1,55 @@
+% SIAM Article Template
+\documentclass[review]{siamart1116}
+
+% Information that is shared between the article and the supplement
+% (title and author information, macros, packages, etc.) goes into
+% ex_shared.tex. If there is no supplement, this file can be included
+% directly.
+
+\input{ex_shared}
+
+% Optional PDF information
+\ifpdf
+\hypersetup{
+  pdftitle={\TheTitle},
+  pdfauthor={\TheAuthors}
+}
+\fi
+
+% The next statement enables references to information in the
+% supplement. See the xr-hyperref package for details.
+
+\begin{document}
+
+\maketitle
+
+% REQUIRED
+\input{abstract}
+
+% REQUIRED
+\begin{keywords}
+  Geometric Programming, Posynomials, Robust Optimization, Uncertainty Set, Robust Linear Programming, Safe Approximation, Aircraft, Conic Optimization
+\end{keywords}
+
+% REQUIRED
+\begin{AMS}
+  90C90, 90C99
+\end{AMS}
+
+\input{introduction}
+
+\input{Robust_Geometric_Programming}
+\input{Conservative_Formulation}
+\input{Equivalent_Intermediate_Formulation}
+\input{Two_Term}
+\input{k_term_posynomials}
+\input{numerical_Results}
+\input{conclusion}
+\input{appendix}
+
+\section*{Acknowledgments}
+This research was supported by Boeing. We thank Professor Karen Willcox who provided insight, expertise, and important feedback that greatly assisted this work.
+\bibliography{references}
+\bibliographystyle{plain}
+
+\end{document}
